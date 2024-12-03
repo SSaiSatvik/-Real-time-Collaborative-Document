@@ -1,0 +1,61 @@
+Report: Collaborative Document System
+Overview
+The Collaborative Document System is designed to allow multiple clients to collaboratively edit a document in real-time. The system consists of a server, a logger, and multiple clients. The server manages the document state and handles client requests, while the logger records all changes made to the document. Clients connect to the server to send and receive document updates.
+
+Components
+Server: Manages the document state and handles client requests.
+Logger: Records all changes made to the document.
+Clients: Connect to the server to send and receive document updates.
+Implementation Details
+Protobuf Definitions
+The doc.proto file defines the protocol buffer messages and services used in the system.
+
+Messages
+Transfer: Represents a document transfer operation.
+
+string type_operation: The type of operation (e.g., insert, delete).
+string data: The data being transferred.
+int32 position: The position in the document.
+bool is_initial: Indicates if this is the initial transfer.
+LogEntry: Represents a log entry for document changes.
+
+string client_id: The ID of the client making the change.
+string type_operation: The type of operation.
+string data: The data being logged.
+int32 position: The position in the document.
+Services
+CollaborativeDocument: Service for editing the document.
+
+rpc EditDocument(stream Transfer) returns (stream Transfer): RPC for editing the document.
+Logger: Service for logging document changes.
+
+rpc LogChanges(LogEntry) returns (google.protobuf.Empty): RPC for logging changes.
+Server
+The server is responsible for managing the document state and handling client requests. It receives document updates from clients, applies the changes, and broadcasts the updates to all connected clients. It also sends log entries to the logger.
+
+Server Implementation
+Document State Management: The server maintains the current state of the document.
+Client Handling: The server handles multiple client connections and processes their requests.
+Broadcasting Updates: The server broadcasts document updates to all connected clients to ensure real-time synchronization.
+Logging Changes: The server sends log entries to the logger to record all changes made to the document.
+Logger
+The logger records all changes made to the document. It receives log entries from the server and writes them to a log file.
+
+Logger Implementation
+Receiving Log Entries: The logger receives log entries from the server.
+Writing to Log File: The logger writes the received log entries to a log file for future reference.
+Clients
+Clients connect to the server to send and receive document updates. They allow users to edit the document and display the current state of the document.
+
+Client Implementation
+Connecting to Server: Clients establish a connection to the server.
+Sending Updates: Clients send document updates to the server.
+Receiving Updates: Clients receive document updates from the server and apply them to the local document state.
+User Interface: Clients provide a user interface for editing the document and displaying the current state.
+Functionality Verification
+Protobuf Compilation: The run.bat script successfully compiles the protobuf files, ensuring that the necessary gRPC code is generated.
+Component Startup: The script starts the logger, server, and two clients in separate Command Prompt windows, ensuring that all components are running concurrently.
+Real-time Collaboration: Clients can connect to the server and collaboratively edit the document. Changes made by one client are broadcast to all other clients, ensuring real-time synchronization.
+Logging: The logger records all changes made to the document, providing a complete history of document edits.
+Conclusion
+The Collaborative Document System successfully implements real-time collaborative editing using gRPC. The provided run.bat script automates the setup and execution of the system components, ensuring that the described functionality is met. The system allows multiple clients to edit a document collaboratively, with changes being synchronized in real-time and logged for future reference.

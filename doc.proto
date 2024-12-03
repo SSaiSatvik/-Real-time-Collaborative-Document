@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto"; 
+
+message Transfer{
+    string type_operation=1;
+    string data=2;
+    int32 position=3;
+    bool is_initial = 4;
+}
+
+message LogEntry {
+    string client_id = 1;
+    string type_operation = 2;
+    string data = 3;
+    int32 position = 4;
+}
+
+service CollaborativeDocument {
+   rpc EditDocument(stream Transfer) returns (stream Transfer);
+}
+
+service Logger {
+    rpc LogChanges(LogEntry) returns (google.protobuf.Empty);
+}
